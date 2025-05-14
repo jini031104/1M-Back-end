@@ -8,6 +8,35 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /signup:
+ *   post:
+ *     summary: 회원가입
+ *     description: POST 방식으로 회원가입
+ *     tags: [Signup]
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/SignupRequest'
+ *
+ *     responses:
+ *       201:
+ *         description: 가입 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SignupResponse'
+ *       409:
+ *         description: 이미 존재하는 사용자
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SignupErrorResponse'
+ */
 // 회원가입
 router.post(
   "/signup",
@@ -54,6 +83,35 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: 로그인
+ *     description: POST 방식으로 로그인
+ *     tags: [Login]
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginRequest'
+ *
+ *     responses:
+ *       201:
+ *         description: 로그인 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginResponse'
+ *       401:
+ *         description: 로그인 실패
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginErrorResponse'
+ */
 // 로그인
 router.post(
   "/login",
@@ -90,6 +148,41 @@ router.post(
     return res.status(200).json({ token: token });
   })
 );
+
+/**
+ * @swagger
+ * /tokens:
+ *   get:
+ *     summary: Auth
+ *     description: 토큰 확인
+ *     tags: [Auth]
+ *
+ *     responses:
+ *       201:
+ *         description: 토큰 유효
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthToken'
+ *       401:
+ *         description: 토큰 없음
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthTokenNot'
+ *       402:
+ *         description: 토큰 만료
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthTokenEnd'
+ *       403:
+ *         description: 유효하지 않은 토큰
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthTokenLess'
+ */
 
 router.get(
   "/tokens",

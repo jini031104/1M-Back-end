@@ -18,19 +18,19 @@ describe("Auth API", () => {
     // 올바른 입력
     it("should signup with valid data", async () => {
       const res = await request(app).post("/signup").send({
-        username: "test@example.com",
+        username: "test",
         password: "password123",
         nickname: "tester",
       });
 
       expect(res.statusCode).toBe(201);
-      expect(res.body).toHaveProperty("username", "test@example.com");
+      expect(res.body).toHaveProperty("username", "test");
     });
 
     // 같은 username 사용
     it("should fail to signup with existing username", async () => {
       const res = await request(app).post("/signup").send({
-        username: "test@example.com",
+        username: "test",
         password: "password123",
         nickname: "tester2",
       });
@@ -45,7 +45,7 @@ describe("Auth API", () => {
     // 올바른 로그인
     it("should login with correct credentials", async () => {
       const res = await request(app).post("/login").send({
-        username: "test@example.com",
+        username: "test",
         password: "password123",
       });
 
@@ -56,7 +56,7 @@ describe("Auth API", () => {
     // 잘못된 username
     it("should fail with wrong credentials - username", async () => {
       const res = await request(app).post("/login").send({
-        username: "test1234@example.com",
+        username: "test1234",
         password: "password123",
       });
 
@@ -67,7 +67,7 @@ describe("Auth API", () => {
     // 잘못된 비밀번호
     it("should fail with wrong credentials - password", async () => {
       const res = await request(app).post("/login").send({
-        username: "test@example.com",
+        username: "test",
         password: "wrongpassword",
       });
 
@@ -76,6 +76,7 @@ describe("Auth API", () => {
     });
   });
 
+  // 토큰 테스트
   describe("GET /tokens", () => {
     let user, validToken;
 
@@ -124,7 +125,7 @@ describe("Auth API", () => {
         .get("/tokens")
         .set("Cookie", `authorization=Bearer ${expired}`);
 
-      expect(res.status).toBe(401);
+      expect(res.status).toBe(402);
       expect(res.body.error).toMatchObject({
         code: "TOKEN_EXPIRED",
         message: "토큰이 만료되었습니다.",
@@ -137,7 +138,7 @@ describe("Auth API", () => {
         .get("/tokens")
         .set("Cookie", `authorization=Bearer not-a-valid-token`);
 
-      expect(res.status).toBe(401);
+      expect(res.status).toBe(403);
       expect(res.body.error).toMatchObject({
         code: "INVALID_TOKEN",
         message: "토큰이 유효하지 않습니다.",
