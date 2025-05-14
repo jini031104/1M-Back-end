@@ -10,7 +10,7 @@ const router = express.Router();
 
 // 회원가입
 router.post(
-  "/singup",
+  "/signup",
   asyncHandler(async (req, res, next) => {
     const { username, password, nickname } = req.body;
 

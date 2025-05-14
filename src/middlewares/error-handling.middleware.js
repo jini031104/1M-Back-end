@@ -15,7 +15,7 @@ export default function (err, req, res, next) {
     return res.status(401).json({
       error: {
         code: "INVALID_TOKEN",
-        message: "토큰이 조작되었습니다.",
+        message: "토큰이 유효하지 않습니다.",
       },
     });
   }
