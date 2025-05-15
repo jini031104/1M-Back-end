@@ -3,6 +3,7 @@ import UserRouter from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger.js";
+import "dotenv/config.js";
 
 import errorHandlingMiddleware from "./middlewares/error-handling.middleware.js";
 
