@@ -1,0 +1,59 @@
+name: CI/CD to EC2
+
+# main 브랜치에 푸시될 때마다 실행
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: 🧪 Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run tests
+        run: npm test
+
+  deploy:
+    name: 🚀 Deploy to EC2
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Configure known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via SSH
+        run: |
+          ssh ubuntu@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
+            cd ~/1M-Back-end      # EC2에서 프로젝트가 위치한 경로
+            git pull origin main
+            npm ci
+            npx prisma migrate deploy
+            pm2 restart 1m-backend || pm2 start src/index.js --name 1m-backend
+            exit
+          EOF
