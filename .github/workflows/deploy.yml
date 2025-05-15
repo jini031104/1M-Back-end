@@ -54,12 +54,13 @@ jobs:
           set -e
           cd ~/1M-Back-end
           git pull origin main
+
           npm ci
           npx prisma generate
           npx prisma db push --accept-data-loss
 
           # startOrReload: 없으면 start, 있으면 reload
-          pm2 startOrReload ecosystem.config.js --update-env --config-type esm
+          pm2 startOrReload ecosystem.config.cjs --update-env
 
           exit 0
           EOF
