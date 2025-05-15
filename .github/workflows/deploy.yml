@@ -57,5 +57,6 @@ jobs:
             npm ci
             npx prisma generate
             npx prisma db push --accept-data-loss
-            pm2 restart 1m-backend
+            pm2 restart 1m-backend || pm2 start src/index.js --name 1m-backend --update-env
+            exit
           EOF
