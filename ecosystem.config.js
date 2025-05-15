@@ -1,4 +1,5 @@
-module.exports = {
+// ecosystem.config.js
+export default {
   apps: [
     {
       name: "1m-backend",
