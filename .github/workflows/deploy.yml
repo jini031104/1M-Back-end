@@ -50,7 +50,7 @@ jobs:
 
       - name: Deploy via SSH
         run: |
-          ssh ubuntu@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SSH_HOST }} << 'EOF'
           set -e
           cd ~/1M-Back-end
           git pull origin main
